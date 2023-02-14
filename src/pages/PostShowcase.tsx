@@ -1,39 +1,40 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FC, ChangeEvent } from "react";
 import { Loader, Card, FormField } from "../components";
 import { Link } from "react-router-dom";
 import { useSyncCallback } from "../utils";
+import { getAllPosts } from "../services";
+import { postType } from "../services/post";
 
-const RenderCards = ({ data, title }) => {
-  if (data?.length > 0) {
-    return data.map((post) => <Card key={post._id} {...post} />);
-  }
-  return (
+interface renderCardsProps {
+  data: postType[];
+  title: string;
+}
+
+const RenderCards: FC<renderCardsProps> = ({ data, title }) => {
+  return data?.length > 0 ? (
+    data.map((post) => (
+      <Card _id={post.prompt.slice(10)} key={post.prompt} {...post} />
+    ))
+  ) : (
     <h2 className="mt-5 font-bold text-[#6449ff] text-xl uppercase">{title}</h2>
   );
 };
 
-const Home = () => {
+const Home: FC = () => {
   const [loading, setLoading] = useState(false);
-  const [allPosts, setAllPosts] = useState(null);
+  const [allPosts, setAllPosts] = useState<postType[]>([]);
 
   const [searchText, setSearchText] = useState("");
-  const [searchedResults, setSearchedResults] = useState(null);
-  const [searchTimeout, setSearchTimeout] = useState(null);
+  const [searchedResults, setSearchedResults] = useState<postType[]>([]);
+  const [searchTimeout, setSearchTimeout] = useState(0);
 
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:8000/api/v1/post", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (response.ok) {
-          const result = await response.json();
-          setAllPosts(result.data.reverse());
-        }
+        const { data } = await getAllPosts("/api/v1/post");
+        console.log(data);
+        setAllPosts(data.reverse());
       } catch (error) {
         alert(error);
       }
@@ -43,21 +44,18 @@ const Home = () => {
   }, []);
 
   const handleResults = useSyncCallback(() => {
-    setSearchTimeout(
-      setTimeout(() => {
-        console.log(searchText);
-        const searchedResult = allPosts?.filter(
-          (item) =>
-            item.name.toLowerCase().includes(searchText.toLowerCase()) ||
-            item.prompt.toLowerCase().includes(searchText.toLowerCase())
-        );
-
-        setSearchedResults(searchedResult);
-      }, 500)
-    );
+    const timer = setTimeout(() => {
+      const searchedResult = allPosts?.filter(
+        (item) =>
+          item.name.toLowerCase().includes(searchText.toLowerCase()) ||
+          item.prompt.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setSearchedResults(searchedResult);
+    }, 500);
+    setSearchTimeout(timer);
   });
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     clearTimeout(searchTimeout);
     setSearchText(e.target.value);
     handleResults();
@@ -67,7 +65,9 @@ const Home = () => {
     <section className="max-w-7xl mx-auto">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="font-extrabold text-3xl text-[#222328]">社区展示</h1>
+          <h1 className="font-extrabold text-3xl text-[#222328] dark:text-white">
+            社区展示
+          </h1>
           <p className="mt-2 text-[#666e75] text-base max-w-[500px]">
             由 AI 生成的图像集展示
           </p>
@@ -108,7 +108,7 @@ const Home = () => {
               {searchText ? (
                 <RenderCards data={searchedResults} title="没有搜索结果" />
               ) : (
-                <RenderCards data={allPosts} title="No posts found" />
+                <RenderCards data={allPosts} title="所有的图片" />
               )}
             </div>
           </>

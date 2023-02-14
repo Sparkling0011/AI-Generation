@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, FormEventHandler, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { download, preview } from "../assets";
-import { getRandomPrompt } from "../utils/";
+import { getRandomPrompt } from "../utils";
 import { FormField, Loader } from "../components";
 import { downloadImageDirect } from "../utils";
+import { generateImageByDesc, uploadPost } from "../services";
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -20,18 +20,12 @@ const CreatePost = () => {
     if (form.prompt) {
       try {
         setGeneratingImg(true);
-        const response = await fetch("http://localhost:8000/api/v1/dalle", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+        const { photo } = await generateImageByDesc("/api/v1/dalle", {
           body: JSON.stringify({ prompt: form.prompt }),
         });
-
-        const data = await response.json();
-        setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
+        setForm({ ...form, photo: `data:image/jpeg;base64,${photo}` });
       } catch (error) {
-        alert(error);
+        alert(JSON.stringify(error));
       }
       setGeneratingImg(false);
     } else {
@@ -39,31 +33,26 @@ const CreatePost = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEventHandler<HTMLFormElement>) => {
     e.preventDefault();
-
     if (form.prompt && form.photo) {
       setLoading(true);
+      console.log("form", form);
       try {
-        const response = await fetch("http://localhost:8000/api/v1/post", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+        await uploadPost("/api/v1/post", {
           body: JSON.stringify(form),
         });
-        await response.json();
         navigate("/post-showcase");
       } catch (error) {
         alert(error);
       }
       setLoading(false);
     } else {
-      alert("Please enter a prompt and generate an image");
+      alert("请输入描述生成图片");
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -75,7 +64,9 @@ const CreatePost = () => {
   return (
     <section className="max-w-7xl mx-auto">
       <div>
-        <h1 className="font-extrabold text-3xl text-[#222328]">创建图片</h1>
+        <h1 className="font-extrabold text-3xl text-[#222328] dark:text-white">
+          创建图片
+        </h1>
         <p className="mt-2 text-[#666e75] text-base max-w-[500px]">
           通过 AI 创建富有想象力和视觉震撼的图像并与社区分享
         </p>

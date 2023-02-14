@@ -18,4 +18,5 @@ const useSyncCallback = (callback) => {
   return Func;
 };
 
+
 export default useSyncCallback;

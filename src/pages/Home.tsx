@@ -4,7 +4,7 @@ const Home = () => {
   return (
     <div className="w-2/3 h-full relative left-1/2 -translate-x-2/4">
       <section>
-        <h1 className="font-extrabold text-3xl text-[#222328]">
+        <h1 className="dark:text-white font-extrabold text-3xl text-[#222328]">
           欢迎使用Open AI
         </h1>
       </section>

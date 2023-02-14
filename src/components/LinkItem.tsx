@@ -1,7 +1,13 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
-const LinkItem = ({ title, discription, url, src }) => {
+interface linkItems {
+  title: string;
+  discription: string;
+  url: string;
+  src: string;
+}
+
+const LinkItem = ({ title, discription, url, src }: linkItems) => {
   return (
     <Link
       to={url}

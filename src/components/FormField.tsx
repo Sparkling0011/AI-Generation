@@ -1,4 +1,15 @@
-import React from "react";
+import { ChangeEventHandler } from "react";
+
+interface formProps {
+  labelName?: string;
+  type: string;
+  name?: string;
+  placeholder?: string;
+  value: string;
+  handleChange: ChangeEventHandler<HTMLInputElement>;
+  isSurpriseMe?: boolean;
+  handleSurpriseMe?: () => void;
+}
 
 const FormField = ({
   labelName,
@@ -9,13 +20,13 @@ const FormField = ({
   handleChange,
   isSurpriseMe,
   handleSurpriseMe,
-}) => {
+}: formProps) => {
   return (
     <div>
-      <div className="flex items-center gap-2 mb-2">
+      <div className={"flex items-center gap-2 mb-2"}>
         <label
           htmlFor={name}
-          className="block text-sm font-medium text-gray-900"
+          className="block text-sm font-medium text-gray-900 dark:text-white"
         >
           {labelName}
         </label>
@@ -37,7 +48,7 @@ const FormField = ({
         value={value}
         onChange={handleChange}
         required
-        className="bg-gray-50 border border-gray-300 rounded-lg py-2 px-4 w-full text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+        className="bg-gray-50 dark: dark:bg-slate-800 border dark:text-white border-gray-300 rounded-lg py-2 px-4 w-full text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
       />
     </div>
   );

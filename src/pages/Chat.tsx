@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useReducer, useState } from "react";
 
 import { postPrompt } from "../services";
 import { FormField } from "../components";
@@ -28,7 +28,6 @@ const Chat = () => {
   const [messageList, dispatch] = useReducer(reducer, []);
   const [context, setContext] = useState("");
   const [isSending, setIsSending] = useState(false);
-  let tempAnswer = "";
 
   const handleSubmit = async () => {
     try {

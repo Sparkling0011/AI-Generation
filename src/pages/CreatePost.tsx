@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEventHandler, useState } from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { download, preview } from "../assets";
 import { getRandomPrompt } from "../utils";
@@ -33,11 +33,10 @@ const CreatePost = () => {
     }
   };
 
-  const handleSubmit = async (e: FormEventHandler<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (form.prompt && form.photo) {
       setLoading(true);
-      console.log("form", form);
       try {
         await uploadPost("/api/v1/post", {
           body: JSON.stringify(form),
@@ -72,7 +71,10 @@ const CreatePost = () => {
         </p>
       </div>
 
-      <form className="mt-16 max-w-3xl" onSubmit={handleSubmit}>
+      <form
+        className="mt-16 max-w-3xl"
+        onSubmit={(event) => handleSubmit(event)}
+      >
         <div className="flex flex-col gap-5">
           <FormField
             labelName="用户名"

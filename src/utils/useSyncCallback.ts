@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 
-const useSyncCallback = (callback) => {
+const useSyncCallback = (callback: () => any) => {
   const [proxyState, setProxyState] = useState({ current: false });
 
   const Func = useCallback(() => {
@@ -17,6 +17,5 @@ const useSyncCallback = (callback) => {
 
   return Func;
 };
-
 
 export default useSyncCallback;

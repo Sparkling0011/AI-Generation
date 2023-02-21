@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode } from "react";
+import { CSSProperties } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -30,7 +30,8 @@ const MessageContent = ({ isHuman, message }: messageContentProps) => {
                 showLineNumbers
                 children={String(children).replace(/\n$/, "")}
                 language={match[1]}
-                style={dark}
+                // @ts-ignore
+                style={dark as { [key: string]: CSSProperties }}
                 PreTag="div"
                 {...props}
               />

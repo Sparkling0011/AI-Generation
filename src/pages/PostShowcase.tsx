@@ -12,9 +12,11 @@ interface renderCardsProps {
 
 const RenderCards: FC<renderCardsProps> = ({ data, title }) => {
   return data?.length > 0 ? (
-    data.map((post) => (
-      <Card _id={post.prompt.slice(10)} key={post.prompt} {...post} />
-    ))
+    <>
+      {data.map((post: postType) => (
+        <Card _id={post.prompt.slice(10)} key={post.prompt} {...post} />
+      ))}
+    </>
   ) : (
     <h2 className="mt-5 font-bold text-[#6449ff] text-xl uppercase">{title}</h2>
   );

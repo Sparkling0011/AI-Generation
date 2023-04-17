@@ -14,7 +14,8 @@
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.5",
     "react-router-dom": "^6.7.0",
-    "react-syntax-highlighter": "^15.5.0"
+    "react-syntax-highlighter": "^15.5.0",
+    "synthetical-monitor": "^0.4.0"
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.5",
